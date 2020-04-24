@@ -1,7 +1,7 @@
 import string
-from graphs import Edge
+from graphs import Edge, Graph
 
-alphabet_list = tuple(string.ascii_uppercase)
+alphabet_list = list(string.ascii_uppercase)
 
 
 def read_data(input_file):
@@ -37,4 +37,4 @@ def generate(input_file):
             col = row + 1
         else:
             col = col + 1
-    return city_list, edge_list
+    return Graph(city_list, edge_list)
