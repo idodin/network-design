@@ -45,3 +45,43 @@ class Graph(object):
                 adj[e.vertex_2].append(e.vertex_1)
 
         return adj
+
+    def find_mst(self, f, reversal=False):
+        self.edges = sorted(self.edges, key=f, reverse=reversal)
+        dsu = DSU(self.vertices)
+
+        selected_vertices = self.vertices.copy()
+        selected_edges = []
+        for e in self.edges:
+            color_1 = dsu.find(e.vertex_1)
+            color_2 = dsu.find(e.vertex_2)
+
+            if color_1 != color_2:
+                selected_edges.append(e)
+                dsu.union(color_1, color_2)
+
+        return Graph(selected_vertices, selected_edges)
+
+
+class DSU(object):
+
+    def __init__(self, nodes):
+        self.parent = {n: n for n in nodes}
+        self.rank = {n: 0 for n in nodes}
+
+    def find(self, x):
+        if self.parent[x] == x:
+            return x
+        return self.find(self.parent[x])
+
+    def union(self, x, y):
+        x_rep = self.find(x)
+        y_rep = self.find(y)
+
+        if self.rank[x_rep] < self.rank[y_rep]:
+            self.parent[x_rep] = y_rep
+        elif self.rank[x_rep] > self.rank[y_rep]:
+            self.parent[y_rep] = x_rep
+        else:
+            self.parent[y_rep] = x_rep
+            self.rank[x_rep] += 1
