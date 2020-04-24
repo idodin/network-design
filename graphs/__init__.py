@@ -1,3 +1,6 @@
+import itertools
+
+
 class Edge(object):
 
     # Constructor For Object
@@ -25,9 +28,14 @@ class Edge(object):
 class Graph(object):
 
     def __init__(self, cities, edges, adj=None):
-        self.vertices = cities
-        self.edges = edges
+        self.vertices = cities.copy()
+        self.edges = edges.copy()
         self.adj = adj or self.construct_adj(edges)
+        for c in cities:
+            if c not in self.adj:
+                raise Exception
+        if not self.is_connected():
+            raise Exception
 
     @staticmethod
     def construct_adj(edges):
@@ -61,6 +69,56 @@ class Graph(object):
                 dsu.union(color_1, color_2)
 
         return Graph(selected_vertices, selected_edges)
+
+    def is_connected(self):
+        visited = {vertex: False for vertex in self.vertices}
+
+        stack = list()
+
+        stack.append(self.vertices[0])
+
+        while len(stack):
+            me = stack[-1]
+            stack.pop()
+
+            if not visited[me]:
+                visited[me] = True
+
+            for neighbour in self.adj[me]:
+                if not visited[neighbour]:
+                    stack.append(neighbour)
+
+        total_visited = [1 for (vertex, state) in visited.items() if state]
+
+        return len(total_visited) == len(self.vertices)
+
+    def compute_reliability(self):
+        # All possible subsets of edges
+        selections = itertools.product(range(2), repeat=len(self.edges))
+        edge_subsets = [[e for (e, s) in zip(self.edges, sel) if s == 1] for sel in selections]
+
+        # All possible subset of edges such that graph remains connected
+        sub_graphs = list()
+        for subset in edge_subsets:
+            try:
+                sub_graphs.append(Graph(self.vertices, subset))
+            except Exception as e:
+                continue
+
+        total_rel = 0
+
+        for graph in sub_graphs:
+            sub_graph_rel = 1
+            for e in graph.edges:
+                sub_graph_rel *= e.reliability
+            for e in [x for x in self.edges if x not in graph.edges]:
+                sub_graph_rel *= (1 - e.reliability)
+            total_rel += sub_graph_rel
+
+        return total_rel
+
+    def compute_cost(self):
+        return sum([e.cost for e in self.edges])
 
 
 class DSU(object):
