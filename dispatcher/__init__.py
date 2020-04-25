@@ -62,6 +62,9 @@ class Dispatcher(object):
         print("Attempting to generate network with Maximal Reliability under Cost Constraint: {} ...".format(
             self.cost_goal))
         network = generate(input_file)
+        if network.compute_cost() <= self.cost_goal:
+            self.print_output(network)
+            write_result(network, output_file)
         max_network = network.compute_max_reliability(self.cost_goal)
         if max_network:
             self.print_output(max_network)
