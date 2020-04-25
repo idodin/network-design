@@ -43,12 +43,12 @@ optional arguments:
 
 For finding some feasible network given a Reliability Target (Part A):
 
-`python main.py --input input.txt --output output.txt reliability 0.45`
+`python main.py --input input.txt --output rel045output.txt reliability 0.45`
 
 #### Cost Constraint
 For finding the maximum reliability network given a Cost Constraint (Part B):
 
-`python main.py --input input.txt --output output.txt cost 150`
+`python main.py --input input.txt --output cost70output.txt cost 70
 
 Input Files are expected to follow the format in input.txt and to be found on the same level as main.py (Repository Root), Output Files will be automatically be created on the same level.
 
@@ -64,7 +64,7 @@ A Dockerfile is provided for portability.
 All environment variables (preceded by -e below) are **required** when running the Docker image (in contrast to the above where input and output are optional with defaults).
 
 ##### Reliability Target
-`docker run -v $(pwd):/mnt/ -e input=a.txt -e output=b.txt -e command=reliability -e goal=0.97 network:latest`
+`docker run -v $(pwd):/mnt/ -e input=input.txt -e output=rel097output.txt -e command=reliability -e goal=0.97 network:latest`
 
 ##### Cost Constraint
-`docker run -v $(pwd):/mnt/ -e input=a.txt -e output=b.txt -e command=cost -e goal=150 network:latest`
+`docker run -v $(pwd):/mnt/ -e input=input.txt -e output=cost150output.txt -e command=cost -e goal=150 network:latest`
