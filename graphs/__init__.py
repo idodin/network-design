@@ -12,9 +12,10 @@ class Edge(object):
 
     # Representation (What gets returned when we do print(my_edge))
     def __repr__(self):
-        return 'endpoints: {}, cost: {}, reliability: {} \n'.format(self.vertex_1 + "<->" + self.vertex_2,
-                                                                    self.cost,
-                                                                    self.reliability)
+        return '\n<Endpoints: {},\n Cost: {},\n Reliability: {}>\n'.format(
+            "[" + self.vertex_1 + ", " + self.vertex_2 + "]",
+            self.cost,
+            self.reliability)
 
     @staticmethod
     def get_cost(edge):
