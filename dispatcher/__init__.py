@@ -12,9 +12,9 @@ class Dispatcher(object):
                                  '(default: input.txt)'
                             )
 
-        parser.add_argument('--output', '-o', nargs=1, action='store', default='output.txt', type=argparse.FileType('w'),
-                            help='Output file containing selected edges'
-                                 ' (default: output.txt)'
+        parser.add_argument('--output', '-o', nargs=1, action='store', default='output.txt',
+                            type=argparse.FileType('w'), help='Output file containing selected edges'
+                                                              ' (default: output.txt)'
                             )
 
         subparsers = parser.add_subparsers(help='Sub-command help', dest='command', required=True)
@@ -35,12 +35,12 @@ class Dispatcher(object):
 
         try:
             self.rel_goal = args.reliability[0]
-        except AttributeError as e:
+        except AttributeError:
             self.rel_goal = 0
 
         try:
             self.cost_goal = args.cost[0]
-        except AttributeError as e:
+        except AttributeError:
             self.cost_goal = 1000000
 
         getattr(self, args.command)(args.input, args.output)
@@ -57,7 +57,8 @@ class Dispatcher(object):
             output_file.write("N/A")
 
     def cost(self, input_file, output_file):
-        print("Attempting to generate network with Maximal Reliability under Cost Constraint: {} ...".format(self.cost_goal))
+        print("Attempting to generate network with Maximal Reliability under Cost Constraint: {} ...".format(
+            self.cost_goal))
         network = generate(input_file)
         cost_mst = network.find_mst(Edge.get_cost)
         maximized = enhancer.enhance_cost(network, cost_mst, self.cost_goal)

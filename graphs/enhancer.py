@@ -1,4 +1,5 @@
 from itertools import chain, combinations
+
 from graphs import Graph
 
 
@@ -11,7 +12,7 @@ def power_set(iterable):
     :return: Power set iterable
     """
     s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
 def match_edges(edge, edge_list):
