@@ -1,6 +1,16 @@
 # Network Design CLI
 Simple Python CLI tool to design Fault Tolerant Networks. Final Project for ECSE 422: Fault Tolerant Computing.
 
+## Authors
+- Imad Dodin - 260713381
+- Nada Marawan - 260720514
+
+## Acknowledgements
+Acknowledgements to Professor Maheswaran and the ECSE 422 Teaching Staff for the following functions whose implementations were only modified slightly:
+- `graphs/Edge`
+- `parsing/read_data`
+- `parsing/generate`
+
 ## How to use
 ### Command Line
 The tool is developed and tested on Python 3.7, its functionality on other versions of python is not guaranteed.
