@@ -38,3 +38,10 @@ def generate(input_file):
         else:
             col = col + 1
     return Graph(city_list, edge_list)
+
+
+def write_result(network, output_file):
+    output_file.write("Reliability: {}\n".format(network.compute_reliability()))
+    output_file.write("Cost: {}\n".format(network.compute_cost()))
+    output_file.write("Network Edges: \n")
+    output_file.write(str(network.edges))
