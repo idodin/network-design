@@ -1,6 +1,5 @@
 import argparse
 
-from graphs import Edge, enhancer
 from parsing import generate, write_result
 
 
@@ -63,18 +62,17 @@ class Dispatcher(object):
         print("Attempting to generate network with Maximal Reliability under Cost Constraint: {} ...".format(
             self.cost_goal))
         network = generate(input_file)
-        cost_mst = network.find_mst(Edge.get_cost)
-        maximized = enhancer.enhance_cost(network, cost_mst, self.cost_goal)
-        if maximized:
-            self.print_output(maximized)
-            write_result(maximized, output_file)
+        max_network = network.compute_max_reliability(self.cost_goal)
+        if max_network:
+            self.print_output(max_network)
+            write_result(max_network, output_file)
         else:
             print("There is no connected Network meeting Cost Goal!")
             output_file.write("N/A")
 
     @staticmethod
     def print_output(network):
-        print("Found Network satisfying Reliability Goal!")
+        print("Found Network satisfying Goal!")
         print("Reliability: {}".format(network.compute_reliability()))
         print("Cost: {}".format(network.compute_cost()))
         print(network.edges)

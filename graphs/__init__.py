@@ -55,22 +55,6 @@ class Graph(object):
 
         return adj
 
-    def find_mst(self, f, reversal=False):
-        self.edges = sorted(self.edges, key=f, reverse=reversal)
-        dsu = DSU(self.vertices)
-
-        selected_vertices = self.vertices.copy()
-        selected_edges = []
-        for e in self.edges:
-            color_1 = dsu.find(e.vertex_1)
-            color_2 = dsu.find(e.vertex_2)
-
-            if color_1 != color_2:
-                selected_edges.append(e)
-                dsu.union(color_1, color_2)
-
-        return Graph(selected_vertices, selected_edges)
-
     def is_connected(self):
         visited = {vertex: False for vertex in self.vertices}
 
@@ -118,29 +102,30 @@ class Graph(object):
 
         return total_rel
 
+    def compute_max_reliability(self, cost_constraint):
+        # All possible subsets of edges
+        selections = itertools.product(range(2), repeat=len(self.edges))
+        edge_subsets = [[e for (e, s) in zip(self.edges, sel) if s == 1] for sel in selections]
+
+        # All possible subset of edges such that graph remains connected and satisfy constraint
+        sub_graphs = list()
+        for subset in edge_subsets:
+            subset_cost = sum([e.cost for e in subset])
+            if subset_cost <= cost_constraint:
+                try:
+                    sub_graphs.append(Graph(self.vertices, subset))
+                except Exception as e:
+                    continue
+
+        max_rel = 0
+        max_graph = None
+        for graph in sub_graphs:
+            curr_rel = graph.compute_reliability()
+            if curr_rel > max_rel:
+                max_rel = curr_rel
+                max_graph = graph
+
+        return max_graph
+
     def compute_cost(self):
         return sum([e.cost for e in self.edges])
-
-
-class DSU(object):
-
-    def __init__(self, nodes):
-        self.parent = {n: n for n in nodes}
-        self.rank = {n: 0 for n in nodes}
-
-    def find(self, x):
-        if self.parent[x] == x:
-            return x
-        return self.find(self.parent[x])
-
-    def union(self, x, y):
-        x_rep = self.find(x)
-        y_rep = self.find(y)
-
-        if self.rank[x_rep] < self.rank[y_rep]:
-            self.parent[x_rep] = y_rep
-        elif self.rank[x_rep] > self.rank[y_rep]:
-            self.parent[y_rep] = x_rep
-        else:
-            self.parent[y_rep] = x_rep
-            self.rank[x_rep] += 1
